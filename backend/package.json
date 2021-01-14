@@ -1,0 +1,28 @@
+{
+  "name": "taxes-apis",
+  "version": "1.0.0",
+  "description": "taxes app with crud operation",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mohamedghaly140/taxes-app.git"
+  },
+  "keywords": [
+    "taxes-app"
+  ],
+  "author": "Mohamed Ghaly",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mohamedghaly140/taxes-app/issues"
+  },
+  "homepage": "https://github.com/Mohamedghaly140/taxes-app#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.9.2",
+    "mongoose": "^5.11.11"
+  }
+}
