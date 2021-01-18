@@ -11,6 +11,7 @@ const FinancierSchema = new Schema({
 	userName: {
 		type: String,
 		required: [true, 'userName is required'],
+		match: [/^[0-9]{9}_[0]{1}$/],
 	},
 	email: {
 		type: String,
@@ -21,7 +22,7 @@ const FinancierSchema = new Schema({
 		type: Number,
 		unique: true,
 		required: [true, 'national ID is required'],
-		minlength: [6, 'Please enter password min length is 6'],
+		match: [/^[0-9]{14}$/],
 	},
 	password: {
 		type: String,
@@ -35,6 +36,11 @@ const FinancierSchema = new Schema({
 	TaxRegistrationNum: {
 		type: String,
 		required: [true, 'file number is required'],
+		match: [/^[0-9]{3}-[0-9]{3}-[0-9]{3}$/],
+	},
+	registered: {
+		type: Boolean,
+		default: false,
 	},
 });
 
