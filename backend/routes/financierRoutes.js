@@ -7,38 +7,49 @@ const router = express.Router();
 const {
 	getFinanciers,
 	getFinancierById,
+	createFinancier,
 } = require('../controllers/financierController'); // Financier Controllers
 
 router.get('/', getFinanciers);
 
 router.get('/:fid', getFinancierById);
 
-// router.post(
-// 	'/',
-// 	auth,
-// 	fileUpload.single('image'),
-// 	[
-// 		body('title', 'Title is required').not().isEmpty(),
-// 		body('description', 'Please enter description min length is 5').isLength({
-// 			min: 5,
-// 		}),
-// 		body('address', 'Address is required').not().isEmpty(),
-// 	],
-// 	createPlace
-// );
+router.post(
+	'/',
+	auth,
+	[
+		body('name', 'name is required').not().isEmpty(),
+		body('userName', 'userName is required').not().isEmpty(),
+		body('email', 'email is required').not().isEmpty().isEmail(),
+		body('nationalID', 'nationalID is required').not().isEmpty().isNumeric(),
+		body('password', 'password is required').not().isEmpty(),
+		body('fileNum', 'fileNum is required').not().isEmpty(),
+		body('TaxRegistrationNum', 'TaxRegistrationNum is required')
+			.not()
+			.isEmpty(),
+		body('registered', 'registered is required').not().isEmpty().isBoolean(),
+	],
+	createFinancier
+);
 
 // router.put(
-// 	'/:pid',
+// 	'/:fid',
 // 	auth,
 // 	[
-// 		body('title', 'Title is required').not().isEmpty(),
-// 		body('description', 'Please enter description min length is 5').isLength({
-// 			min: 5,
-// 		}),
+// 		body('name', 'name is required').not().isEmpty(),
+// 		body('userName', 'userName is required').not().isEmpty(),
+// 		body('email', 'email is required').not().isEmpty().isEmail(),
+// 		body('nationalID', 'nationalID is required').not().isEmpty().isNumeric(),
+// 		body('password', 'password is required').not().isEmpty(),
+// 		body('fileNum', 'fileNum is required').not().isEmpty(),
+// 		body('TaxRegistrationNum', 'TaxRegistrationNum is required')
+// 			.not()
+// 			.isEmpty(),
+// 		body('registered', 'registered is required').not().isEmpty().isBoolean(),
 // 	],
 // 	updatePlaceById
 // );
 
-// router.delete('/:pid', auth, deletePlaceById);
+// router.delete('/:fid', auth, deletePlaceById);
 
 module.exports = router;
