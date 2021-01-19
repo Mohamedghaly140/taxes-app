@@ -1,9 +1,9 @@
 // Load env vars
-require('dotenv').config({ path: './config/config.env' });
+require('dotenv').config({ path: './.env' });
+require('colors');
 
 const express = require('express');
 const morgan = require('morgan');
-const colors = require('colors');
 const connectDB = require('./db/db');
 const HttpError = require('./models/HttpError');
 
@@ -20,6 +20,9 @@ if (process.env.NODE_ENV === 'development') {
 	app.use(morgan('dev'));
 }
 
+// import routes files
+const financierRoutes = require('./routes/financierRoutes');
+
 app.use((req, res, next) => {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader(
@@ -29,6 +32,9 @@ app.use((req, res, next) => {
 	res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 	next();
 });
+
+// excute routes
+app.use('/api/financier', financierRoutes);
 
 app.use((error, req, res, next) => {
 	// if (req.file) {
@@ -46,6 +52,6 @@ app.use((error, req, res, next) => {
 
 const PORT = process.env.PORT;
 
-app.listen(5000, () => {
+app.listen(PORT, () => {
 	console.log(`Server listening on port ${PORT}!`);
 });

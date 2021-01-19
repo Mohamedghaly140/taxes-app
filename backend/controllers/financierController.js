@@ -27,7 +27,7 @@ exports.getFinancierById = async (req, res, next) => {
 	let financier;
 
 	try {
-		financier = await Place.findById(financierId);
+		financier = await Financier.findById(financierId);
 
 		if (!financier) {
 			return next(
@@ -39,7 +39,7 @@ exports.getFinancierById = async (req, res, next) => {
 		}
 	} catch (err) {
 		return next(
-			new HttpError('Something went wrong, could not find a place', 500)
+			new HttpError('Something went wrong, could not find a financier', 500)
 		);
 	}
 
@@ -93,27 +93,28 @@ exports.createFinancier = async (req, res, next) => {
 		// creator,
 	});
 
-	let user;
+	// let user;
+
+	// try {
+	// 	user = await User.findById(creator);
+
+	// 	if (!user) {
+	// 		return next(
+	// 			new HttpError(`Could not find user for the provided id.`, 404)
+	// 		);
+	// 	}
+	// } catch (err) {
+	// 	return next(new HttpError('Creating financier failed, try again later', 500));
+	// }
 
 	try {
-		user = await User.findById(creator);
-
-		if (!user) {
-			return next(
-				new HttpError(`Could not find user for the provided id.`, 404)
-			);
-		}
-	} catch (err) {
-		return next(new HttpError('Creating place failed, try again later', 500));
-	}
-
-	try {
-		const session = await mongoose.startSession();
-		session.startTransaction();
-		await createdFinancier.save({ session: session });
-		user.financiers.push(createdFinancier);
-		await user.save({ session: session });
-		await session.commitTransaction();
+		// const session = await mongoose.startSession();
+		// session.startTransaction();
+		// await createdFinancier.save({ session: session });
+		// user.financiers.push(createdFinancier);
+		// await user.save({ session: session });
+		// await session.commitTransaction();
+		await createdFinancier.save();
 	} catch (err) {
 		const error = new HttpError(
 			'Creating financier faild, please try again',

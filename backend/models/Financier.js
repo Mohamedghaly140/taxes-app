@@ -46,4 +46,4 @@ const FinancierSchema = new Schema({
 
 FinancierSchema.plugin(uniqueValidator);
 
-module.exports = mongoose.model('Financier', UserSchema);
+module.exports = mongoose.model('Financier', FinancierSchema);

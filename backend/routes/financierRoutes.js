@@ -16,12 +16,15 @@ router.get('/:fid', getFinancierById);
 
 router.post(
 	'/',
-	auth,
 	[
 		body('name', 'name is required').not().isEmpty(),
 		body('userName', 'userName is required').not().isEmpty(),
 		body('email', 'email is required').not().isEmpty().isEmail(),
-		body('nationalID', 'nationalID is required').not().isEmpty().isNumeric(),
+		body('nationalID', 'nationalID is required')
+			.not()
+			.isEmpty()
+			.isNumeric()
+			.matches(/^[0-9]{14}$/),
 		body('password', 'password is required').not().isEmpty(),
 		body('fileNum', 'fileNum is required').not().isEmpty(),
 		body('TaxRegistrationNum', 'TaxRegistrationNum is required')
