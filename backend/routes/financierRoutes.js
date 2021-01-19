@@ -20,7 +20,11 @@ router.post(
 	'/',
 	[
 		body('name', 'name is required').not().isEmpty(),
-		body('email', 'email is required').not().isEmpty().isEmail(),
+		body('email', 'email is required')
+			.not()
+			.isEmpty()
+			.normalizeEmail()
+			.isEmail(),
 		body('nationalID', 'nationalID is required')
 			.not()
 			.isEmpty()
@@ -43,7 +47,11 @@ router.put(
 	'/:fid',
 	[
 		body('name', 'name is required').not().isEmpty(),
-		body('email', 'email is required').not().isEmpty().isEmail(),
+		body('email', 'email is required')
+			.not()
+			.isEmpty()
+			.normalizeEmail()
+			.isEmail(),
 		body('nationalID', 'nationalID is required').not().isEmpty().isNumeric(),
 		body('password', 'password is required')
 			.not()

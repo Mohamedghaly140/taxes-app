@@ -22,6 +22,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // import routes files
 const financierRoutes = require('./routes/financierRoutes');
+const usersRoutes = require('./routes/usersRoutes');
 
 app.use((req, res, next) => {
 	res.setHeader('Access-Control-Allow-Origin', '*');
@@ -35,6 +36,7 @@ app.use((req, res, next) => {
 
 // excute routes
 app.use('/api/financier', financierRoutes);
+app.use('/api/auth', usersRoutes);
 
 app.use((error, req, res, next) => {
 	// if (req.file) {

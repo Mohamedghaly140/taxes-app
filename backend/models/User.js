@@ -17,15 +17,11 @@ const UserSchema = new Schema({
 		type: String,
 		minlength: [6, 'Please enter password min length is 6'],
 	},
-	image: {
-		type: String,
-		required: true,
-	},
-	places: [
+	financiers: [
 		{
 			type: mongoose.Types.ObjectId,
 			required: true,
-			ref: 'Place',
+			ref: 'Financier',
 		},
 	],
 });

@@ -5,13 +5,11 @@ const router = express.Router();
 
 // import controllers
 const { getUsers, signup, login } = require('../controllers/usersControllers'); // Users Controllers
-const fileUpload = require('../middleware/file-upload');
 
-router.get('/', getUsers);
+router.get('/users', getUsers);
 
 router.post(
 	'/signup',
-	fileUpload.single('image'),
 	[
 		body('name', 'name is required').not().isEmpty(),
 		body('email', 'Please enter valid email').normalizeEmail().isEmail(),
