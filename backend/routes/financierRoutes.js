@@ -10,14 +10,19 @@ const {
 	createFinancier,
 	updateFinancierById,
 	deleteFinancierById,
+	getFinanciersByUserId,
 } = require('../controllers/financierController'); // Financier Controllers
+const auth = require('../middleware/auth');
 
 router.get('/', getFinanciers);
 
-router.get('/:fid', getFinancierById);
+router.get('/user/:uid', auth, getFinanciersByUserId);
+
+router.get('/:fid', auth, getFinancierById);
 
 router.post(
 	'/',
+	auth,
 	[
 		body('name', 'name is required').not().isEmpty(),
 		body('email', 'email is required')
@@ -45,6 +50,7 @@ router.post(
 
 router.put(
 	'/:fid',
+	auth,
 	[
 		body('name', 'name is required').not().isEmpty(),
 		body('email', 'email is required')
@@ -66,6 +72,6 @@ router.put(
 	updateFinancierById
 );
 
-router.delete('/:fid', deleteFinancierById);
+router.delete('/:fid', auth, deleteFinancierById);
 
 module.exports = router;

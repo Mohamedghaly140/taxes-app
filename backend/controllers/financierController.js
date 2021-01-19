@@ -1,7 +1,9 @@
+const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
 
 const HttpError = require('../models/HttpError');
 const Financier = require('../models/Financier');
+const User = require('../models/User');
 
 exports.getFinanciers = async (req, res, next) => {
 	let financiers;
@@ -17,6 +19,43 @@ exports.getFinanciers = async (req, res, next) => {
 	res.status(200).json({
 		message: `find all financiers successfuly`,
 		count: financiers.length,
+		financiers: financiers.map(f => f.toObject({ getters: true })),
+	});
+};
+
+exports.getFinanciersByUserId = async (req, res, next) => {
+	const userId = req.params.uid;
+
+	let financiers;
+
+	try {
+		financiers = await Financier.find({ creator: userId });
+	} catch (err) {
+		return next(
+			new HttpError('Fetching financiers faild, please try again', 500)
+		);
+	}
+
+	if (!financiers || financiers.length === 0) {
+		return next(
+			new HttpError(
+				`Could not find any financiers for the provided user id ${userId}..`,
+				404
+			)
+		);
+	}
+
+	if (userId.toString() !== req.userData.userId) {
+		return next(
+			new HttpError(
+				'You are not allowed to see this financier No valid token, authorization is denied',
+				403
+			)
+		);
+	}
+
+	res.status(200).json({
+		message: `find successfuly financiers with userId ${userId}`,
 		financiers: financiers.map(f => f.toObject({ getters: true })),
 	});
 };
@@ -40,6 +79,15 @@ exports.getFinancierById = async (req, res, next) => {
 	} catch (err) {
 		return next(
 			new HttpError('Something went wrong, could not find a financier', 500)
+		);
+	}
+
+	if (financier.creator.toString() !== req.userData.userId) {
+		return next(
+			new HttpError(
+				'You are not allowed to see this financier No valid token, authorization is denied',
+				403
+			)
 		);
 	}
 
@@ -77,7 +125,7 @@ exports.createFinancier = async (req, res, next) => {
 		fileNum,
 		TaxRegistrationNum,
 		registered,
-		// creator,
+		creator,
 	} = req.body;
 
 	const createdFinancier = new Financier({
@@ -88,31 +136,41 @@ exports.createFinancier = async (req, res, next) => {
 		fileNum,
 		TaxRegistrationNum,
 		registered,
-		// creator,
+		creator,
 	});
 
-	// let user;
+	if (createdFinancier.creator.toString() !== req.userData.userId) {
+		return next(
+			new HttpError(
+				'You are not allowed to add financier No valid token, authorization is denied',
+				403
+			)
+		);
+	}
 
-	// try {
-	// 	user = await User.findById(creator);
-
-	// 	if (!user) {
-	// 		return next(
-	// 			new HttpError(`Could not find user for the provided id.`, 404)
-	// 		);
-	// 	}
-	// } catch (err) {
-	// 	return next(new HttpError('Creating financier failed, try again later', 500));
-	// }
+	let user;
 
 	try {
-		// const session = await mongoose.startSession();
-		// session.startTransaction();
-		// await createdFinancier.save({ session: session });
-		// user.financiers.push(createdFinancier);
-		// await user.save({ session: session });
-		// await session.commitTransaction();
-		await createdFinancier.save();
+		user = await User.findById(creator);
+
+		if (!user) {
+			return next(
+				new HttpError(`Could not find user for the provided id.`, 404)
+			);
+		}
+	} catch (err) {
+		return next(
+			new HttpError('Creating financier failed, try again later', 500)
+		);
+	}
+
+	try {
+		const session = await mongoose.startSession();
+		session.startTransaction();
+		await createdFinancier.save({ session: session });
+		user.financiers.push(createdFinancier);
+		await user.save({ session: session });
+		await session.commitTransaction();
 	} catch (err) {
 		const error = new HttpError(
 			'Creating financier faild, please try again',
@@ -152,14 +210,14 @@ exports.updateFinancierById = async (req, res, next) => {
 		);
 	}
 
-	// if (updatedFinancier.creator.toString() !== req.userData.userId) {
-	// 	return next(
-	// 		new HttpError(
-	// 			'You are not allowed to update this place No valid token, authorization is denied',
-	// 			403
-	// 		)
-	// 	);
-	// }
+	if (updatedFinancier.creator.toString() !== req.userData.userId) {
+		return next(
+			new HttpError(
+				'You are not allowed to update this financier No valid token, authorization is denied',
+				403
+			)
+		);
+	}
 
 	updatedFinancier.name = req.body.name;
 	updatedFinancier.email = req.body.email;
@@ -207,27 +265,25 @@ exports.deleteFinancierById = async (req, res, next) => {
 		);
 	}
 
-	// if (financier.creator.id !== req.userData.userId) {
-	// 	return next(
-	// 		new HttpError(
-	// 			'You are not allowed to delete this financier No valid token, authorization is denied',
-	// 			403
-	// 		)
-	// 	);
-	// }
+	if (financier.creator.id !== req.userData.userId) {
+		return next(
+			new HttpError(
+				'You are not allowed to delete this financier No valid token, authorization is denied',
+				403
+			)
+		);
+	}
 
 	// const imagePath = financier.image;
 
 	try {
-		// const session = await mongoose.startSession();
-		// session.startTransaction();
-		// await financier.remove({ session: session });
-		// financier.creator.financiers.pull(financier);
-		// await financier.creator.save({ session: session });
-		// await session.commitTransaction();
-		await financier.remove();
+		const session = await mongoose.startSession();
+		session.startTransaction();
+		await financier.remove({ session: session });
+		financier.creator.financiers.pull(financier);
+		await financier.creator.save({ session: session });
+		await session.commitTransaction();
 	} catch (err) {
-		// console.log(err);
 		return next(
 			new HttpError(
 				'Someting went wrong, could not delete financier relation',

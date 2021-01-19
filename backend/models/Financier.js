@@ -49,6 +49,11 @@ const FinancierSchema = new Schema({
 		type: Boolean,
 		default: false,
 	},
+	creator: {
+		type: mongoose.Types.ObjectId,
+		required: true,
+		ref: 'User',
+	},
 });
 
 FinancierSchema.plugin(uniqueValidator);
