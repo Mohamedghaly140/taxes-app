@@ -5,11 +5,13 @@ import AppRouter from './router/Router';
 let logoutTimer;
 
 const App = () => {
+	const [name, setName] = useState(null);
 	const [token, setToken] = useState(false);
 	const [userId, setUserId] = useState(null);
 	const [tokenExpirationDate, setTokenExpirationDate] = useState(null);
 
-	const login = useCallback((uid, token, expirationDate) => {
+	const login = useCallback((uid, token, name, expirationDate) => {
+		setName(name);
 		setToken(token);
 		setUserId(uid);
 		const tokenExpirationDate =
@@ -20,12 +22,14 @@ const App = () => {
 			JSON.stringify({
 				userId: uid,
 				token: token,
+				name: name,
 				expiration: tokenExpirationDate.toISOString(),
 			})
 		);
 	}, []);
 
 	const logout = useCallback(() => {
+		setName(null);
 		setToken(null);
 		setUserId(null);
 		setTokenExpirationDate(null);
@@ -49,8 +53,8 @@ const App = () => {
 			storedData.token &&
 			new Date(storedData.expiration) > new Date()
 		) {
-			const { userId, token, expiration } = storedData;
-			login(userId, token, new Date(expiration));
+			const { userId, token, name, expiration } = storedData;
+			login(userId, token, name, new Date(expiration));
 		}
 	}, [login]);
 
@@ -60,6 +64,7 @@ const App = () => {
 				isLoggedIn: !!token,
 				token: token,
 				userId: userId,
+				name: name,
 				login: login,
 				logout: logout,
 			}}

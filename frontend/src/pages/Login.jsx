@@ -5,7 +5,8 @@ import { AuthContext } from '../context/auth-context';
 import httpClient from '../api/httpClient';
 
 const Login = () => {
-	const auth = useContext(AuthContext);
+	const authContext = useContext(AuthContext);
+	const { login } = authContext;
 
 	const [user, setUser] = useState({
 		email: '',
@@ -27,12 +28,13 @@ const Login = () => {
 			.post('api/auth/login', user)
 			.then(res => {
 				console.log(res.data);
+				const userData = res.data;
+				const { userId, token, name } = userData;
+				login(userId, token, name);
 			})
 			.catch(err => {
 				console.log(err.response.data.message);
 			});
-
-		// auth.login();
 	};
 
 	return (
