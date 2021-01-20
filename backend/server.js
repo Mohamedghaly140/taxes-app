@@ -4,6 +4,7 @@ require('colors');
 
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 const connectDB = require('./db/db');
 const HttpError = require('./models/HttpError');
 
@@ -14,6 +15,7 @@ const app = express();
 
 // body parser middleware
 app.use(express.json({ extended: false }));
+app.use(cors());
 
 // Dev Logging Middleware
 if (process.env.NODE_ENV === 'development') {
@@ -55,5 +57,5 @@ app.use((error, req, res, next) => {
 const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
-	console.log(`Server listening on port ${PORT}!`);
+	console.log(`Server listening on port ${PORT}!`.yellow.bold);
 });

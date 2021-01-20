@@ -86,6 +86,7 @@ exports.signup = async (req, res, next) => {
 
 	res.status(201).json({
 		message: 'Signed up successfuly',
+		name: createdUser.name,
 		userId: createdUser.id,
 		email: createdUser.email,
 		token: token,
@@ -145,6 +146,7 @@ exports.login = async (req, res, next) => {
 
 	res.json({
 		message: 'Loggedin successfuly',
+		name: exsitingUser.name,
 		userId: exsitingUser.id,
 		email: exsitingUser.email,
 		token: token,

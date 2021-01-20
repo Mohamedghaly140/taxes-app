@@ -2,6 +2,7 @@ import { useState, useContext } from 'react';
 import { Form, Button } from 'react-bootstrap';
 
 import { AuthContext } from '../context/auth-context';
+import httpClient from '../api/httpClient';
 
 const Login = () => {
 	const auth = useContext(AuthContext);
@@ -22,11 +23,21 @@ const Login = () => {
 
 		console.log('user login', user);
 
+		httpClient
+			.post('api/auth/login', user)
+			.then(res => {
+				console.log(res.data);
+			})
+			.catch(err => {
+				console.log(err.response.data.message);
+			});
+
 		// auth.login();
 	};
 
 	return (
-		<div className="d-flex justify-content-center align-items-center pt-5 mt-5">
+		<div className="d-flex flex-column justify-content-center align-items-center pt-5">
+			<h2 className="mb-5">تسجيل الدخول</h2>
 			<Form
 				className="w-100"
 				style={{ maxWidth: '450px' }}
