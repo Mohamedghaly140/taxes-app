@@ -29,7 +29,7 @@ exports.getFinanciersByUserId = async (req, res, next) => {
 	let financiers;
 
 	try {
-		financiers = await Financier.find({ creator: userId });
+		financiers = await Financier.find({ creator: userId }, '-fileNum -nationalID -TaxRegistrationNum');
 	} catch (err) {
 		return next(
 			new HttpError('Fetching financiers faild, please try again', 500)

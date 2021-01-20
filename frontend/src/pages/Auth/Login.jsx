@@ -1,8 +1,8 @@
 import { useState, useContext } from 'react';
 import { Form, Button } from 'react-bootstrap';
 
-import { AuthContext } from '../context/auth-context';
-import httpClient from '../api/httpClient';
+import { AuthContext } from '../../context/auth-context';
+import httpClient from '../../api/httpClient';
 
 const Login = () => {
 	const authContext = useContext(AuthContext);
