@@ -1,13 +1,18 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useCallback } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 
 import { AuthContext } from '../../context/auth-context';
 import httpClient from '../../api/httpClient';
+import SpinnerContainer from '../../components/Spinner/SpinnerContainer';
 
 const Login = () => {
 	const authContext = useContext(AuthContext);
 	const { login } = authContext;
 
+	const history = useHistory();
+
+	const [loading, setLodaing] = useState(false);
 	const [user, setUser] = useState({
 		email: '',
 		password: '',
@@ -19,23 +24,29 @@ const Login = () => {
 		setUser({ ...user, [event.target.name]: event.target.value });
 	};
 
-	const onSubmitHandler = event => {
-		event.preventDefault();
+	const onSubmitHandler = useCallback(
+		event => {
+			event.preventDefault();
 
-		console.log('user login', user);
+			setLodaing(true);
 
-		httpClient
-			.post('api/auth/login', user)
-			.then(res => {
-				console.log(res.data);
-				const userData = res.data;
-				const { userId, token, name } = userData;
-				login(userId, token, name);
-			})
-			.catch(err => {
-				console.log(err.response.data.message);
-			});
-	};
+			httpClient
+				.post('/api/auth/login', user)
+				.then(res => {
+					// console.log(res.data);
+					const userData = res.data;
+					const { userId, token, name } = userData;
+					login(userId, token, name);
+					setLodaing(false);
+					history.replace('/');
+				})
+				.catch(err => {
+					console.log(err.response.data.message);
+					setLodaing(false);
+				});
+		},
+		[user, history, login]
+	);
 
 	return (
 		<div className="d-flex flex-column justify-content-center align-items-center pt-5">
@@ -73,9 +84,20 @@ const Login = () => {
 				{/* <Form.Group controlId="formBasicCheckbox">
 					<Form.Check type="checkbox" label="Check me out" />
 				</Form.Group> */}
-				<Button variant="primary" type="submit">
-					تسجيل الدخول
-				</Button>
+
+				<div className="my-2">
+					<p className="mb-0">
+						ليس لديك حساب <Link to="sign-up">سجل كمستخدم جديد</Link>
+					</p>
+				</div>
+
+				{loading ? (
+					<SpinnerContainer />
+				) : (
+					<Button variant="primary" type="submit" block>
+						تسجيل الدخول
+					</Button>
+				)}
 			</Form>
 		</div>
 	);

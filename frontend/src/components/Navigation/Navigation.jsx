@@ -1,6 +1,7 @@
 import { Container, Navbar, Nav } from 'react-bootstrap';
 import { Fragment, useContext } from 'react';
 import { NavLink } from 'react-router-dom';
+import { CgLogOut } from 'react-icons/cg';
 
 import { AuthContext } from '../../context/auth-context';
 
@@ -32,8 +33,12 @@ const Navigation = () => {
 								</Nav.Link>
 							</Fragment>
 						)}
-						{isLoggedIn && <Nav.Link>مرحبا {name}</Nav.Link>}
-						{isLoggedIn && <Nav.Link onClick={logout}>تسجيل الخروج</Nav.Link>}
+						{isLoggedIn && <Nav.Link className="active">مرحبا {name}</Nav.Link>}
+						{isLoggedIn && (
+							<Nav.Link onClick={logout} className="active">
+								تسجيل الخروج <CgLogOut color="#fff" />
+							</Nav.Link>
+						)}
 					</Nav>
 				</Navbar.Collapse>
 			</Container>

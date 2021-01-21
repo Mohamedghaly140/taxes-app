@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Container, Table } from 'react-bootstrap';
 import { IoCheckmarkDoneCircle } from 'react-icons/io5';
 import { AiFillCloseCircle } from 'react-icons/ai';
@@ -10,7 +10,7 @@ import { AuthContext } from '../../context/auth-context';
 
 const Home = () => {
 	const authContext = useContext(AuthContext);
-	const { userId, token } = authContext;
+	const { userId, token, isLoggedIn } = authContext;
 
 	const [clients, setClients] = useState(null);
 	const [loading, setLodaing] = useState(false);
@@ -25,7 +25,7 @@ const Home = () => {
 				},
 			})
 			.then(res => {
-				console.log(res.data);
+				// console.log(res.data);
 				setClients(res.data.financiers);
 				setLodaing(false);
 			})
@@ -34,6 +34,10 @@ const Home = () => {
 				setLodaing(false);
 			});
 	}, [token, userId]);
+
+	if (!token || !isLoggedIn) {
+		return <Redirect to="/login" />;
+	}
 
 	if (loading || !clients) {
 		return (
@@ -83,7 +87,12 @@ const Home = () => {
 							{clients.map((client, i) => (
 								<tr key={client.id}>
 									<td>
-										<Link to={`/financier/${client.id}`}>{i + 1}</Link>
+										<Link
+											className="w-100 h-100 d-block"
+											to={`/financier/${client.id}`}
+										>
+											{i + 1}
+										</Link>
 									</td>
 									<td>{client.name}</td>
 									<td>{client.email}</td>

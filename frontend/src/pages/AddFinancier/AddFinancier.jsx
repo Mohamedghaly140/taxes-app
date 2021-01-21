@@ -165,7 +165,7 @@ const AddFinancier = () => {
 					</Form.Group>
 
 					<div className="d-flex justify-content-start align-items-center">
-						{!loading ? (
+						{loading ? (
 							<Spinner />
 						) : (
 							<Button variant="primary" type="submit">

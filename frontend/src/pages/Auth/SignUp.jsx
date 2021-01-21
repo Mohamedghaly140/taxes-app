@@ -1,13 +1,18 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 
 import { AuthContext } from '../../context/auth-context';
 import httpClient from '../../api/httpClient';
+import SpinnerContainer from '../../components/Spinner/SpinnerContainer';
 
 const SignUp = () => {
 	const authContext = useContext(AuthContext);
 	const { login } = authContext;
 
+	const history = useHistory();
+
+	const [loading, setLodaing] = useState(false);
 	const [user, setUser] = useState({
 		name: '',
 		email: '',
@@ -20,23 +25,29 @@ const SignUp = () => {
 		setUser({ ...user, [event.target.name]: event.target.value });
 	};
 
-	const onSubmitHandler = event => {
-		event.preventDefault();
+	const onSubmitHandler = useCallback(
+		event => {
+			event.preventDefault();
 
-		// console.log('user signup', user);
+			setLodaing(true);
 
-		httpClient
-			.post('api/auth/signup', user)
-			.then(res => {
-				console.log(res.data);
-				const userData = res.data;
-				const { userId, token, name } = userData;
-				login(userId, token, name);
-			})
-			.catch(err => {
-				console.log(err.response.data.message);
-			});
-	};
+			httpClient
+				.post('/api/auth/signup', user)
+				.then(res => {
+					// console.log(res.data);
+					const userData = res.data;
+					const { userId, token, name } = userData;
+					login(userId, token, name);
+					setLodaing(false);
+					history.replace('/');
+				})
+				.catch(err => {
+					console.log(err.response.data.message);
+					setLodaing(false);
+				});
+		},
+		[user, history, login]
+	);
 
 	return (
 		<div className="d-flex flex-column justify-content-center align-items-center pt-5">
@@ -81,9 +92,14 @@ const SignUp = () => {
 						onChange={inputChangeHandler}
 					/>
 				</Form.Group>
-				<Button variant="primary" type="submit">
-					تسجيل الدخول
-				</Button>
+
+				{loading ? (
+					<SpinnerContainer />
+				) : (
+					<Button variant="primary" type="submit" block>
+						تسجيل الدخول
+					</Button>
+				)}
 			</Form>
 		</div>
 	);
