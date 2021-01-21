@@ -29,7 +29,10 @@ exports.getFinanciersByUserId = async (req, res, next) => {
 	let financiers;
 
 	try {
-		financiers = await Financier.find({ creator: userId }, '-fileNum -nationalID -TaxRegistrationNum');
+		financiers = await Financier.find(
+			{ creator: userId },
+			'-fileNum -nationalID -TaxRegistrationNum'
+		);
 	} catch (err) {
 		return next(
 			new HttpError('Fetching financiers faild, please try again', 500)
@@ -179,7 +182,12 @@ exports.createFinancier = async (req, res, next) => {
 		return next(error);
 	}
 
-	res.status(201).json({ financier: createdFinancier });
+	res
+		.status(201)
+		.json({
+			message: `add financier successfuly`,
+			financier: createdFinancier,
+		});
 };
 
 exports.updateFinancierById = async (req, res, next) => {

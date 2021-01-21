@@ -1,11 +1,12 @@
 import { Container, Navbar, Nav } from 'react-bootstrap';
-import { useContext } from 'react';
+import { Fragment, useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { AuthContext } from '../../context/auth-context';
 
 const Navigation = () => {
-	const auth = useContext(AuthContext);
+	const authContext = useContext(AuthContext);
+	const { isLoggedIn, logout, name } = authContext;
 
 	return (
 		<Navbar bg="dark" variant="dark" expand="md">
@@ -16,18 +17,23 @@ const Navigation = () => {
 				<Navbar.Toggle aria-controls="basic-navbar-nav" />
 				<Navbar.Collapse id="basic-navbar-nav">
 					<Nav className="ml-auto">
-						<Nav.Link as={NavLink} to="/" exact>
-							قائمة الممولين
-						</Nav.Link>
-						<Nav.Link as={NavLink} to="/login">
-							تسجيل الدخول
-						</Nav.Link>
-						<Nav.Link as={NavLink} to="/sign-up">
-							مستخدم جديد
-						</Nav.Link>
-						<Nav.Link as={NavLink} to="/sign-up">
-							تسجيل الخروج
-						</Nav.Link>
+						{isLoggedIn && (
+							<Nav.Link as={NavLink} to="/" exact>
+								قائمة الممولين
+							</Nav.Link>
+						)}
+						{!isLoggedIn && (
+							<Fragment>
+								<Nav.Link as={NavLink} to="/login">
+									تسجيل الدخول
+								</Nav.Link>
+								<Nav.Link as={NavLink} to="/sign-up">
+									مستخدم جديد
+								</Nav.Link>
+							</Fragment>
+						)}
+						{isLoggedIn && <Nav.Link>مرحبا {name}</Nav.Link>}
+						{isLoggedIn && <Nav.Link onClick={logout}>تسجيل الخروج</Nav.Link>}
 					</Nav>
 				</Navbar.Collapse>
 			</Container>

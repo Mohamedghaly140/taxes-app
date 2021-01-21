@@ -65,4 +65,3 @@ FinancierSchema.pre('save', function (next) {
 });
 
 module.exports = mongoose.model('Financier', FinancierSchema);
-// `${value.split('-')[0]}${value.split('-')[1]}${value.split('-')[0]}_0`

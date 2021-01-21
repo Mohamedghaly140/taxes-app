@@ -76,7 +76,7 @@ exports.signup = async (req, res, next) => {
 		token = jwt.sign(
 			{ userId: createdUser.id, email: createdUser.email },
 			process.env.JWT_SECRET_KEY,
-			{ expiresIn: '1h' }
+			{ expiresIn: '4h' }
 		);
 	} catch (err) {
 		return next(
@@ -136,7 +136,7 @@ exports.login = async (req, res, next) => {
 		token = jwt.sign(
 			{ userId: exsitingUser.id, email: exsitingUser.email },
 			process.env.JWT_SECRET_KEY,
-			{ expiresIn: '1h' }
+			{ expiresIn: '4h' }
 		);
 	} catch (err) {
 		return next(

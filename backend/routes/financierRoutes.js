@@ -28,8 +28,7 @@ router.post(
 		body('email', 'email is required')
 			.not()
 			.isEmpty()
-			.normalizeEmail()
-			.isEmail(),
+			.normalizeEmail(),
 		body('nationalID', 'nationalID is required')
 			.not()
 			.isEmpty()
