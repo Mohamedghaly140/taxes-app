@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { Container, Table } from 'react-bootstrap';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, Link } from 'react-router-dom';
 import httpClient from '../../api/httpClient';
 import SpinnerContainer from '../../components/Spinner/SpinnerContainer';
 import { IoCheckmarkDoneCircle } from 'react-icons/io5';
@@ -67,7 +67,12 @@ const FinancierDetails = () => {
 			<Container>
 				<div className="d-flex justify-content-between align-items-center mb-4">
 					<h2 className="m-0">تفاصيل الممول</h2>
-					<button className="btn btn-success">تعديل بيانات الممول</button>
+					<Link
+						className="btn btn-success"
+						to={`/edit-financier/${financier.id}?editMode=true`}
+					>
+						تعديل بيانات الممول
+					</Link>
 					<button
 						className="btn btn-danger"
 						onClick={() => financierDeleteHandler(financier.id)}

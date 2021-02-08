@@ -1,4 +1,5 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
+import { useParams, useHistory, useLocation } from 'react-router-dom';
 import { Form, Button, Container } from 'react-bootstrap';
 
 import httpClient from '../../api/httpClient';
@@ -8,6 +9,11 @@ import { AuthContext } from '../../context/auth-context';
 const AddFinancier = () => {
 	const authContext = useContext(AuthContext);
 	const { token, userId } = authContext;
+
+	const { id } = useParams();
+	const { search } = useLocation();
+	const history = useHistory();
+	const editMode = search.split('=')[1] === 'true' ? true : false;
 
 	const [loading, setLoading] = useState(false);
 	const [registered, setRegistered] = useState(false);
@@ -48,6 +54,56 @@ const AddFinancier = () => {
 		creator: userId,
 	};
 
+	useEffect(() => {
+		console.log('edit id', id, editMode);
+		if (editMode) {
+			httpClient
+				.get(`/api/financier/${id}`, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+				.then(res => {
+					console.log('from server 67 editMode', res.data);
+					const financier = res.data.financier;
+					const {
+						name,
+						email,
+						password,
+						fileNum,
+						nationalID,
+						userName,
+						phone,
+						attorneyNum,
+						TaxRegistrationNum,
+						registered,
+						addValue,
+					} = financier;
+
+					setAddValue(addValue);
+					setRegistered(registered);
+
+					setFinancier({
+						name,
+						phone,
+						email,
+						fileNum,
+						password,
+						userName,
+						nationalID: nationalID.toString(),
+						attorneyNum,
+						TaxRegistrationNum,
+					});
+
+					setLoading(false);
+				})
+				.catch(err => {
+					console.log(err.response.data.message);
+					setLoading(false);
+				});
+		}
+	}, [id, editMode, token]);
+
 	const onSubmitHandler = event => {
 		event.preventDefault();
 
@@ -55,26 +111,45 @@ const AddFinancier = () => {
 
 		setLoading(true);
 
-		httpClient
-			.post('/api/financier', data, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			})
-			.then(res => {
-				console.log(res.data);
-				setLoading(false);
-			})
-			.catch(err => {
-				console.log(err.response.data.message);
-				setLoading(false);
-			});
+		if (editMode) {
+			httpClient
+				.put(`/api/financier/${id}`, data, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+				.then(res => {
+					console.log(res.data);
+					setLoading(false);
+					history.push('/');
+				})
+				.catch(err => {
+					console.log(err.response.data.message);
+					setLoading(false);
+				});
+		} else {
+			httpClient
+				.post('/api/financier', data, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+				.then(res => {
+					console.log(res.data);
+					setLoading(false);
+					history.push('/');
+				})
+				.catch(err => {
+					console.log(err.response.data.message);
+					setLoading(false);
+				});
+		}
 	};
 
 	return (
 		<div>
 			<div className="py-2 my-2 mb-4 text-center">
-				<h2>اضافة ممول جديد</h2>
+				<h2>{editMode ? 'تعديل بيانات الممول' : 'اضافة ممول جديد'}</h2>
 			</div>
 			<Container>
 				<Form onSubmit={onSubmitHandler} className="form-card mb-5 mt-3">
@@ -226,7 +301,7 @@ const AddFinancier = () => {
 							<Spinner />
 						) : (
 							<Button variant="primary" type="submit">
-								اضـــــافة
+								{editMode ? 'تحديــث البيانات' : 'اضـــــافة'}
 							</Button>
 						)}
 					</div>

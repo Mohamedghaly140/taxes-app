@@ -36,7 +36,7 @@ const Home = () => {
 				console.log(err.response.data.message);
 				setLodaing(false);
 			});
-	}, [token, userId]);
+	}, []);
 
 	useEffect(() => {
 		if (text !== '' && clients) {
@@ -92,7 +92,7 @@ const Home = () => {
 								className="btn btn-danger mr-1"
 								onClick={() => setText('')}
 							>
-								حذف
+								حـذف
 							</button>
 							<input
 								className="form-control"
