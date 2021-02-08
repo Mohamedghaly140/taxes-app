@@ -42,7 +42,6 @@ router.post(
 		body('TaxRegistrationNum', 'TaxRegistrationNum is required')
 			.not()
 			.isEmpty(),
-		body('registered', 'registered is required').not().isEmpty().isBoolean(),
 	],
 	createFinancier
 );
@@ -69,7 +68,6 @@ router.put(
 		body('TaxRegistrationNum', 'TaxRegistrationNum is required')
 			.not()
 			.isEmpty(),
-		body('registered', 'registered is required').not().isEmpty().isBoolean(),
 	],
 	updateFinancierById
 );

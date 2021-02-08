@@ -46,9 +46,8 @@ const Home = () => {
 				})
 			);
 		}
+		// eslint-disable-next-line
 	}, [text]);
-
-	const onChangeSearch = () => {};
 
 	if (!token || !isLoggedIn) {
 		return <Redirect to="/login" />;
@@ -110,7 +109,8 @@ const Home = () => {
 								<th>البريد الاليكتروني</th>
 								<th>اسم المستخدم</th>
 								<th>كلمه المرور</th>
-								<th>مسجل</th>
+								<th>منظومة</th>
+								<th>مضافة</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -131,6 +131,13 @@ const Home = () => {
 										<td>{client.password}</td>
 										<td className="text-center">
 											{client.registered ? (
+												<IoCheckmarkDoneCircle size="1.5em" color="green" />
+											) : (
+												<AiFillCloseCircle size="1.5em" color="red" />
+											)}
+										</td>
+										<td className="text-center">
+											{client.addValue ? (
 												<IoCheckmarkDoneCircle size="1.5em" color="green" />
 											) : (
 												<AiFillCloseCircle size="1.5em" color="red" />

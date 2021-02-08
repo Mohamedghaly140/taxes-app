@@ -131,6 +131,7 @@ exports.createFinancier = async (req, res, next) => {
 		attorneyNum,
 		phone,
 		registered,
+		addValue,
 		creator,
 	} = req.body;
 
@@ -145,6 +146,7 @@ exports.createFinancier = async (req, res, next) => {
 		attorneyNum,
 		phone,
 		registered,
+		addValue,
 		creator,
 	});
 
@@ -239,6 +241,7 @@ exports.updateFinancierById = async (req, res, next) => {
 	updatedFinancier.fileNum = req.body.fileNum;
 	updatedFinancier.TaxRegistrationNum = req.body.TaxRegistrationNum;
 	updatedFinancier.registered = req.body.registered;
+	updatedFinancier.addValue = req.body.addValue;
 	updatedFinancier.attorneyNum = req.body.attorneyNum;
 	updatedFinancier.phone = req.body.phone;
 

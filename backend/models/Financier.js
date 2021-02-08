@@ -57,6 +57,10 @@ const FinancierSchema = new Schema({
 		type: Boolean,
 		default: false,
 	},
+	addValue: {
+		type: Boolean,
+		default: false,
+	},
 	creator: {
 		type: mongoose.Types.ObjectId,
 		required: true,

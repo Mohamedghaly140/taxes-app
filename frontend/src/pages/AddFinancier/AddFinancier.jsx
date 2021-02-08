@@ -11,6 +11,7 @@ const AddFinancier = () => {
 
 	const [loading, setLoading] = useState(false);
 	const [registered, setRegistered] = useState(false);
+	const [addValue, setAddValue] = useState(false);
 	const [financier, setFinancier] = useState({
 		name: '',
 		phone: '',
@@ -43,6 +44,7 @@ const AddFinancier = () => {
 		...financier,
 		nationalID: +nationalID,
 		registered,
+		addValue,
 		creator: userId,
 	};
 
@@ -183,7 +185,7 @@ const AddFinancier = () => {
 					</div>
 
 					<div className="d-flex justify-content-between align-items-center my-3">
-						<Form.Group className="col-6">
+						<Form.Group className="col-6 pl-0">
 							<Form.Label htmlFor="userName">اسم المستخدم</Form.Label>
 							<Form.Control
 								id="userName"
@@ -196,19 +198,28 @@ const AddFinancier = () => {
 						</Form.Group>
 					</div>
 
-					<Form.Group className="px-3">
-						<Form.Label htmlFor="registered">
-							مسجل علي منظومة البوابة الاليكترونية ؟
-						</Form.Label>
-						<Form.Check
-							id="registered"
-							className="ml-4"
-							type="checkbox"
-							label="نعم"
-							checked={registered}
-							onChange={e => setRegistered(e.target.checked)}
-						/>
-					</Form.Group>
+					<div className="d-flex justify-content-between align-items-center my-3">
+						<Form.Group>
+							<Form.Check
+								id="registered"
+								className="ml-4"
+								type="checkbox"
+								label="مسجل علي منظومة البوابة الاليكترونية"
+								checked={registered}
+								onChange={e => setRegistered(e.target.checked)}
+							/>
+						</Form.Group>
+						<Form.Group>
+							<Form.Check
+								id="registered"
+								className="ml-4"
+								type="checkbox"
+								label="قيمــه مضافة"
+								checked={addValue}
+								onChange={e => setAddValue(e.target.checked)}
+							/>
+						</Form.Group>
+					</div>
 
 					<div className="d-flex justify-content-start align-items-center px-3">
 						{loading ? (
