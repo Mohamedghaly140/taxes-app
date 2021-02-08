@@ -1,4 +1,4 @@
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import Navigation from '../components/Navigation/Navigation';
 import AddFinancier from '../pages/AddFinancier/AddFinancier';
 
@@ -12,18 +12,18 @@ import NotFound from '../pages/NotFound/NotFound';
 
 const Routes = () => {
 	return (
-		<BrowserRouter>
+		<>
 			<Navigation />
 			<Switch>
+				<Route path="/login" component={Login} />
+				<Route path="/sign-up" component={SignUp} />
 				<PrivateRoute exact path="/" component={Home} />
 				<PrivateRoute path="/add-financier" component={AddFinancier} />
 				<PrivateRoute path="/edit-financier/:id" component={AddFinancier} />
 				<PrivateRoute path="/financier/:id" component={FinancierDetails} />
-				<Route path="/login" component={Login} />
-				<Route path="/sign-up" component={SignUp} />
 				<Route component={NotFound} />
 			</Switch>
-		</BrowserRouter>
+		</>
 	);
 };
 

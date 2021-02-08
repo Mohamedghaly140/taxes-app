@@ -39,15 +39,6 @@ exports.getFinanciersByUserId = async (req, res, next) => {
 		);
 	}
 
-	if (!financiers || financiers.length === 0) {
-		return next(
-			new HttpError(
-				`Could not find any financiers for the provided user id ${userId}..`,
-				404
-			)
-		);
-	}
-
 	if (userId.toString() !== req.userData.userId) {
 		return next(
 			new HttpError(

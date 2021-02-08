@@ -6,16 +6,14 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 	const authContext = useContext(AuthContext);
 	const { isLoggedIn, token } = authContext;
 
-	console.log(isLoggedIn, token);
-
 	return (
 		<Route
 			{...rest}
 			render={props =>
-				!isLoggedIn && !token ? (
-					<Redirect to="/login" />
-				) : (
+				isLoggedIn && token ? (
 					<Component {...props} />
+				) : (
+					<Redirect to="/login" />
 				)
 			}
 		/>

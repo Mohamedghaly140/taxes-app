@@ -7,11 +7,7 @@ import { AuthContext } from '../../context/auth-context';
 
 const Navigation = () => {
 	const authContext = useContext(AuthContext);
-	const { isLoggedIn, logout, name } = authContext;
-
-	console.log('headeeerr', isLoggedIn, name);
-
-	useEffect(() => {}, [isLoggedIn]);
+	const { isLoggedIn, name, logout } = authContext;
 
 	return (
 		<Navbar bg="dark" variant="dark" expand="md">

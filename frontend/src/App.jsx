@@ -38,6 +38,18 @@ const App = () => {
 	}, []);
 
 	useEffect(() => {
+		const storedData = JSON.parse(localStorage.getItem('userData'));
+		if (
+			storedData &&
+			storedData.token &&
+			new Date(storedData.expiration) > new Date()
+		) {
+			const { userId, token, name, expiration } = storedData;
+			login(userId, token, name, new Date(expiration));
+		}
+	}, [login]);
+
+	useEffect(() => {
 		if (token && tokenExpirationDate) {
 			const remainingTime =
 				tokenExpirationDate.getTime() - new Date().getTime();
@@ -46,23 +58,6 @@ const App = () => {
 			clearTimeout(logoutTimer);
 		}
 	}, [token, tokenExpirationDate, logout]);
-
-	useEffect(() => {
-		const storedData = JSON.parse(localStorage.getItem('userData'));
-		console.log(
-			'🚀 ~ file: App.jsx ~ line 52 ~ useEffect ~ storedData',
-			storedData
-		);
-		if (
-			storedData &&
-			storedData.token &&
-			new Date(storedData.expiration) > new Date()
-		) {
-			const { userId, token, name, expiration } = storedData;
-			console.log('token', token);
-			login(userId, token, name, new Date(expiration));
-		}
-	}, [login]);
 
 	return (
 		<AuthContext.Provider

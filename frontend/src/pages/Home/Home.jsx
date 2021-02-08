@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Container, Table } from 'react-bootstrap';
 import { IoCheckmarkDoneCircle } from 'react-icons/io5';
 import { AiFillCloseCircle } from 'react-icons/ai';
@@ -11,7 +11,7 @@ import { AuthContext } from '../../context/auth-context';
 
 const Home = () => {
 	const authContext = useContext(AuthContext);
-	const { userId, token, isLoggedIn } = authContext;
+	const { userId, token } = authContext;
 
 	const [text, setText] = useState('');
 	const [FilterClients, setFilterClients] = useState(null);
@@ -29,6 +29,7 @@ const Home = () => {
 				},
 			})
 			.then(res => {
+				console.log(res.data);
 				setClients(res.data.financiers);
 				setLodaing(false);
 			})
@@ -36,7 +37,7 @@ const Home = () => {
 				console.log(err.response.data.message);
 				setLodaing(false);
 			});
-	}, []);
+	}, [userId, token]);
 
 	useEffect(() => {
 		if (text !== '' && clients) {
@@ -50,14 +51,21 @@ const Home = () => {
 		// eslint-disable-next-line
 	}, [text]);
 
-	if (!token || !isLoggedIn) {
-		return <Redirect to="/login" />;
-	}
-
 	if (loading || !clients) {
 		return (
 			<div className="vh-100 d-flex align-items-center justify-content-center">
 				<Spinner />
+			</div>
+		);
+	}
+
+	if (clients.length === 0) {
+		return (
+			<div className="d-flex justify-content-center align-items-center vh-100">
+				<div className="text-center" style={{ fontSize: 'large' }}>
+					لا يوجد اي ممولين قم بالاضاقه{' '}
+					<Link to="/add-financier">اضافة ممول جديد</Link>
+				</div>
 			</div>
 		);
 	}

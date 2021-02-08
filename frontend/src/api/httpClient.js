@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import axios from 'axios';
 
 // import { AuthContext } from '../context/auth-context';
@@ -7,13 +6,13 @@ import axios from 'axios';
 
 // const { token } = authContext;
 
-const config = {
-	headers: {
-		'Access-Control-Allow-Origin': '*',
-		'Content-Type': 'application/json',
-	},
-	// Authorization: `Bearer ${token}`,
-};
+// const config = {
+// 	headers: {
+// 		'Access-Control-Allow-Origin': '*',
+// 		'Content-Type': 'application/json',
+// 	},
+// 	// Authorization: `Bearer ${token}`,
+// };
 
 const instance = axios.create({
 	baseURL: `${process.env.REACT_APP_BACKEND_URL}`,
