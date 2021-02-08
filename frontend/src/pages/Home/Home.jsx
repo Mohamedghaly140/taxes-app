@@ -3,6 +3,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { Container, Table } from 'react-bootstrap';
 import { IoCheckmarkDoneCircle } from 'react-icons/io5';
 import { AiFillCloseCircle } from 'react-icons/ai';
+import { BiSearch } from 'react-icons/bi';
 
 import Spinner from '../../components/Spinner/SpinnerContainer';
 import httpClient from '../../api/httpClient';
@@ -84,16 +85,24 @@ const Home = () => {
 				<div className="py-2 mb-4 d-flex justify-content-center align-items-center">
 					<div className="col-6">
 						<span className="d-block font-weight-bold text-center mb-2">
-							بحث
+							بحــــــــــــــث <BiSearch size="1.5em" />
 						</span>
-						<input
-							className="form-control"
-							type="text"
-							name="search"
-							id="search"
-							value={text}
-							onChange={e => setText(e.target.value)}
-						/>
+						<div className="d-flex">
+							<button
+								className="btn btn-danger mr-1"
+								onClick={() => setText('')}
+							>
+								حذف
+							</button>
+							<input
+								className="form-control"
+								type="text"
+								name="search"
+								id="search"
+								value={text}
+								onChange={e => setText(e.target.value)}
+							/>
+						</div>
 					</div>
 				</div>
 			</Container>
@@ -163,6 +172,13 @@ const Home = () => {
 										<td>{client.password}</td>
 										<td className="text-center">
 											{client.registered ? (
+												<IoCheckmarkDoneCircle size="1.5em" color="green" />
+											) : (
+												<AiFillCloseCircle size="1.5em" color="red" />
+											)}
+										</td>
+										<td className="text-center">
+											{client.addValue ? (
 												<IoCheckmarkDoneCircle size="1.5em" color="green" />
 											) : (
 												<AiFillCloseCircle size="1.5em" color="red" />

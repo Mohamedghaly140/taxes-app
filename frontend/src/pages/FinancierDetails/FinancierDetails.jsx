@@ -82,6 +82,14 @@ const FinancierDetails = () => {
 							<td>{financier.name}</td>
 						</tr>
 						<tr>
+							<td>اسم المستخدم</td>
+							<td>{financier.userName}</td>
+						</tr>
+						<tr>
+							<td>كلمه المرور</td>
+							<td>{financier.password}</td>
+						</tr>
+						<tr>
 							<td>البريد الاليكتروني</td>
 							<td>{financier.email}</td>
 						</tr>
@@ -94,21 +102,31 @@ const FinancierDetails = () => {
 							<td>{financier.nationalID}</td>
 						</tr>
 						<tr>
-							<td>اسم المستخدم</td>
-							<td>{financier.userName}</td>
-						</tr>
-						<tr>
-							<td>كلمه المرور</td>
-							<td>{financier.password}</td>
-						</tr>
-						<tr>
 							<td>رقـــم الملف</td>
 							<td>{financier.fileNum}</td>
+						</tr>
+						<tr>
+							<td>رقـــم التوكيل</td>
+							<td>{financier.attorneyNum}</td>
+						</tr>
+						<tr>
+							<td>رقـــم الهاتف</td>
+							<td>{financier.phone}</td>
 						</tr>
 						<tr>
 							<td>مسجل علي بوابة الضريبية الاليكترونية</td>
 							<td>
 								{financier.registered ? (
+									<IoCheckmarkDoneCircle size="1.5em" color="green" />
+								) : (
+									<AiFillCloseCircle size="1.5em" color="red" />
+								)}
+							</td>
+						</tr>
+						<tr>
+							<td>مسجل قيمــه مضافة</td>
+							<td>
+								{financier.addValue ? (
 									<IoCheckmarkDoneCircle size="1.5em" color="green" />
 								) : (
 									<AiFillCloseCircle size="1.5em" color="red" />
