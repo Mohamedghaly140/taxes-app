@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { Container, Table } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import httpClient from '../../api/httpClient';
 import SpinnerContainer from '../../components/Spinner/SpinnerContainer';
 import { IoCheckmarkDoneCircle } from 'react-icons/io5';
@@ -13,6 +13,7 @@ const FinancierDetails = () => {
 	const { token } = authContext;
 
 	const { id } = useParams();
+	const history = useHistory();
 
 	const [loading, setLoading] = useState(false);
 	const [financier, setFinancier] = useState(null);
@@ -35,6 +36,24 @@ const FinancierDetails = () => {
 			});
 	}, [id, token]);
 
+	const financierDeleteHandler = id => {
+		httpClient
+			.delete(`/api/financier/${id}`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
+			.then(res => {
+				console.log(res.data);
+				setLoading(false);
+				history.push('/');
+			})
+			.catch(err => {
+				console.log(err.response.data.message);
+				setLoading(false);
+			});
+	};
+
 	if (loading || !financier) {
 		return (
 			<div className="vh-100 d-flex justify-content-center align-items-center">
@@ -49,7 +68,10 @@ const FinancierDetails = () => {
 				<div className="d-flex justify-content-between align-items-center mb-4">
 					<h2 className="m-0">تفاصيل الممول</h2>
 					<button className="btn btn-success">تعديل بيانات الممول</button>
-					<button className="btn btn-danger">
+					<button
+						className="btn btn-danger"
+						onClick={() => financierDeleteHandler(financier.id)}
+					>
 						حذف الممول من قاعده البيانات
 					</button>
 				</div>
