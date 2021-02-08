@@ -13,10 +13,13 @@ const AddFinancier = () => {
 	const [registered, setRegistered] = useState(false);
 	const [financier, setFinancier] = useState({
 		name: '',
+		phone: '',
 		email: '',
 		fileNum: '',
 		password: '',
+		userName: '',
 		nationalID: '',
+		attorneyNum: '',
 		TaxRegistrationNum: '',
 	});
 
@@ -26,6 +29,9 @@ const AddFinancier = () => {
 		password,
 		fileNum,
 		nationalID,
+		userName,
+		phone,
+		attorneyNum,
 		TaxRegistrationNum,
 	} = financier;
 
@@ -69,7 +75,7 @@ const AddFinancier = () => {
 				<h2>اضافة ممول جديد</h2>
 			</div>
 			<Container>
-				<Form onSubmit={onSubmitHandler}>
+				<Form onSubmit={onSubmitHandler} className="form-card mb-5 mt-3">
 					<div className="d-flex justify-content-between align-items-center">
 						<Form.Group className="w-100 mr-2">
 							<Form.Label htmlFor="name">اسم الممول</Form.Label>
@@ -150,7 +156,47 @@ const AddFinancier = () => {
 						</Form.Group>
 					</div>
 
-					<Form.Group>
+					<div className="d-flex justify-content-between align-items-center my-3">
+						<Form.Group className="w-100 mr-2">
+							<Form.Label htmlFor="phone">رقـــم الهاتف</Form.Label>
+							<Form.Control
+								id="phone"
+								name="phone"
+								type="number"
+								placeholder="ادخل رقم الهاتف"
+								value={phone}
+								onChange={inputChangeHandler}
+							/>
+						</Form.Group>
+
+						<Form.Group className="w-100 ml-2">
+							<Form.Label htmlFor="attorneyNum">رقــم التوكيل</Form.Label>
+							<Form.Control
+								id="attorneyNum"
+								name="attorneyNum"
+								type="text"
+								placeholder="ادخل رقــم التوكيل"
+								value={attorneyNum}
+								onChange={inputChangeHandler}
+							/>
+						</Form.Group>
+					</div>
+
+					<div className="d-flex justify-content-between align-items-center my-3">
+						<Form.Group className="col-6">
+							<Form.Label htmlFor="userName">اسم المستخدم</Form.Label>
+							<Form.Control
+								id="userName"
+								name="userName"
+								type="text"
+								placeholder="ادخل اسم المستخدم"
+								value={userName}
+								onChange={inputChangeHandler}
+							/>
+						</Form.Group>
+					</div>
+
+					<Form.Group className="px-3">
 						<Form.Label htmlFor="registered">
 							مسجل علي منظومة البوابة الاليكترونية ؟
 						</Form.Label>
@@ -164,7 +210,7 @@ const AddFinancier = () => {
 						/>
 					</Form.Group>
 
-					<div className="d-flex justify-content-start align-items-center">
+					<div className="d-flex justify-content-start align-items-center px-3">
 						{loading ? (
 							<Spinner />
 						) : (

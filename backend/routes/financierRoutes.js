@@ -25,10 +25,10 @@ router.post(
 	auth,
 	[
 		body('name', 'name is required').not().isEmpty(),
-		body('email', 'email is required')
-			.not()
-			.isEmpty()
-			.normalizeEmail(),
+		body('userName', 'userName is required').not().isEmpty(),
+		body('phone', 'phone is required').not().isEmpty(),
+		body('attorneyNum', 'attorneyNum is required').not().isEmpty(),
+		body('email', 'email is required').not().isEmpty().normalizeEmail(),
 		body('nationalID', 'nationalID is required')
 			.not()
 			.isEmpty()
@@ -52,6 +52,9 @@ router.put(
 	auth,
 	[
 		body('name', 'name is required').not().isEmpty(),
+		body('userName', 'userName is required').not().isEmpty(),
+		body('phone', 'phone is required').not().isEmpty(),
+		body('attorneyNum', 'attorneyNum is required').not().isEmpty(),
 		body('email', 'email is required')
 			.not()
 			.isEmpty()

@@ -11,15 +11,19 @@ const FinancierSchema = new Schema({
 	},
 	userName: {
 		type: String,
+		unique: true,
 		trim: true,
-		match: [/^[0-9]{9}_[0]{1}$/],
+		required: [true, 'user name is required'],
+	},
+	phone: {
+		type: String,
 	},
 	email: {
 		type: String,
-		unique: true,
 		trim: true,
 		lowercase: true,
 		required: [true, 'email is required'],
+		default: 'fake@fake-email.com',
 	},
 	nationalID: {
 		type: Number,
@@ -31,10 +35,14 @@ const FinancierSchema = new Schema({
 	password: {
 		type: String,
 		trim: true,
-		required: [true, 'password is required'],
 		minlength: [6, 'Please enter password min length is 6'],
 	},
 	fileNum: {
+		type: String,
+		trim: true,
+		required: [true, 'file number is required'],
+	},
+	attorneyNum: {
 		type: String,
 		trim: true,
 		required: [true, 'file number is required'],
@@ -57,11 +65,5 @@ const FinancierSchema = new Schema({
 });
 
 FinancierSchema.plugin(uniqueValidator);
-
-FinancierSchema.pre('save', function (next) {
-	const transformedTaxRegistrationNum = this.TaxRegistrationNum.split('-');
-	this.userName = `${transformedTaxRegistrationNum[0]}${transformedTaxRegistrationNum[1]}${transformedTaxRegistrationNum[0]}_0`;
-	next();
-});
 
 module.exports = mongoose.model('Financier', FinancierSchema);

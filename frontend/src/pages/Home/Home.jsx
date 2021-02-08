@@ -12,6 +12,9 @@ const Home = () => {
 	const authContext = useContext(AuthContext);
 	const { userId, token, isLoggedIn } = authContext;
 
+	const [text, setText] = useState('');
+	const [FilterClients, setFilterClients] = useState(null);
+
 	const [clients, setClients] = useState(null);
 	const [loading, setLodaing] = useState(false);
 
@@ -25,7 +28,6 @@ const Home = () => {
 				},
 			})
 			.then(res => {
-				// console.log(res.data);
 				setClients(res.data.financiers);
 				setLodaing(false);
 			})
@@ -34,6 +36,19 @@ const Home = () => {
 				setLodaing(false);
 			});
 	}, [token, userId]);
+
+	useEffect(() => {
+		if (text !== '' && clients) {
+			setFilterClients(
+				clients.filter(client => {
+					const regex = new RegExp(`${text}`, 'gi');
+					return client.name.match(regex) || client.email.match(regex);
+				})
+			);
+		}
+	}, [text]);
+
+	const onChangeSearch = () => {};
 
 	if (!token || !isLoggedIn) {
 		return <Redirect to="/login" />;
@@ -67,6 +82,21 @@ const Home = () => {
 						</a>
 					</div>
 				</div>
+				<div className="py-2 mb-4 d-flex justify-content-center align-items-center">
+					<div className="col-6">
+						<span className="d-block font-weight-bold text-center mb-2">
+							بحث
+						</span>
+						<input
+							className="form-control"
+							type="text"
+							name="search"
+							id="search"
+							value={text}
+							onChange={e => setText(e.target.value)}
+						/>
+					</div>
+				</div>
 			</Container>
 			<Container>
 				{loading ? (
@@ -84,29 +114,55 @@ const Home = () => {
 							</tr>
 						</thead>
 						<tbody>
-							{clients.map((client, i) => (
-								<tr key={client.id}>
-									<td>
-										<Link
-											className="w-100 h-100 d-block"
-											to={`/financier/${client.id}`}
-										>
-											{i + 1}
-										</Link>
-									</td>
-									<td>{client.name}</td>
-									<td>{client.email}</td>
-									<td dir="ltr">{client.userName}</td>
-									<td>{client.password}</td>
-									<td className="text-center">
-										{client.registered ? (
-											<IoCheckmarkDoneCircle size="1.5em" color="green" />
-										) : (
-											<AiFillCloseCircle size="1.5em" color="red" />
-										)}
-									</td>
-								</tr>
-							))}
+							{text === '' &&
+								clients.map((client, i) => (
+									<tr key={client.id}>
+										<td>
+											<Link
+												className="w-100 h-100 d-block"
+												to={`/financier/${client.id}`}
+											>
+												{i + 1}
+											</Link>
+										</td>
+										<td>{client.name}</td>
+										<td>{client.email}</td>
+										<td dir="ltr">{client.userName}</td>
+										<td>{client.password}</td>
+										<td className="text-center">
+											{client.registered ? (
+												<IoCheckmarkDoneCircle size="1.5em" color="green" />
+											) : (
+												<AiFillCloseCircle size="1.5em" color="red" />
+											)}
+										</td>
+									</tr>
+								))}
+							{FilterClients &&
+								text !== '' &&
+								FilterClients.map((client, i) => (
+									<tr key={client.id}>
+										<td>
+											<Link
+												className="w-100 h-100 d-block"
+												to={`/financier/${client.id}`}
+											>
+												{i + 1}
+											</Link>
+										</td>
+										<td>{client.name}</td>
+										<td>{client.email}</td>
+										<td dir="ltr">{client.userName}</td>
+										<td>{client.password}</td>
+										<td className="text-center">
+											{client.registered ? (
+												<IoCheckmarkDoneCircle size="1.5em" color="green" />
+											) : (
+												<AiFillCloseCircle size="1.5em" color="red" />
+											)}
+										</td>
+									</tr>
+								))}
 						</tbody>
 					</Table>
 				)}

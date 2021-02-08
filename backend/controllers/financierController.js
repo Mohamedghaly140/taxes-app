@@ -32,7 +32,7 @@ exports.getFinanciersByUserId = async (req, res, next) => {
 		financiers = await Financier.find(
 			{ creator: userId },
 			'-fileNum -nationalID -TaxRegistrationNum'
-		);
+		).sort({ name: 1 });
 	} catch (err) {
 		return next(
 			new HttpError('Fetching financiers faild, please try again', 500)
@@ -123,10 +123,13 @@ exports.createFinancier = async (req, res, next) => {
 	const {
 		name,
 		email,
+		userName,
 		nationalID,
 		password,
 		fileNum,
 		TaxRegistrationNum,
+		attorneyNum,
+		phone,
 		registered,
 		creator,
 	} = req.body;
@@ -134,10 +137,13 @@ exports.createFinancier = async (req, res, next) => {
 	const createdFinancier = new Financier({
 		name,
 		email,
+		userName,
 		nationalID,
 		password,
 		fileNum,
 		TaxRegistrationNum,
+		attorneyNum,
+		phone,
 		registered,
 		creator,
 	});
@@ -182,12 +188,10 @@ exports.createFinancier = async (req, res, next) => {
 		return next(error);
 	}
 
-	res
-		.status(201)
-		.json({
-			message: `add financier successfuly`,
-			financier: createdFinancier,
-		});
+	res.status(201).json({
+		message: `add financier successfuly`,
+		financier: createdFinancier,
+	});
 };
 
 exports.updateFinancierById = async (req, res, next) => {
@@ -228,12 +232,15 @@ exports.updateFinancierById = async (req, res, next) => {
 	}
 
 	updatedFinancier.name = req.body.name;
+	updatedFinancier.userName = req.body.userName;
 	updatedFinancier.email = req.body.email;
 	updatedFinancier.nationalID = req.body.nationalID;
 	updatedFinancier.password = req.body.password;
 	updatedFinancier.fileNum = req.body.fileNum;
 	updatedFinancier.TaxRegistrationNum = req.body.TaxRegistrationNum;
 	updatedFinancier.registered = req.body.registered;
+	updatedFinancier.attorneyNum = req.body.attorneyNum;
+	updatedFinancier.phone = req.body.phone;
 
 	try {
 		updatedFinancier.save();

@@ -47,7 +47,7 @@ const FinancierDetails = () => {
 		<div className="py-3">
 			<Container>
 				<div className="d-flex justify-content-between align-items-center mb-4">
-					<h2 className="my-3 mb-4">تفاصيل الممول</h2>
+					<h2 className="m-0">تفاصيل الممول</h2>
 					<button className="btn btn-success">تعديل بيانات الممول</button>
 					<button className="btn btn-danger">
 						حذف الممول من قاعده البيانات
