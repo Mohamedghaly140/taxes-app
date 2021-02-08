@@ -96,7 +96,7 @@ const Home = () => {
 									</td>
 									<td>{client.name}</td>
 									<td>{client.email}</td>
-									<td>{client.userName}</td>
+									<td dir="ltr">{client.userName}</td>
 									<td>{client.password}</td>
 									<td className="text-center">
 										{client.registered ? (

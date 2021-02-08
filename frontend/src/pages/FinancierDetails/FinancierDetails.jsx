@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Table } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import httpClient from '../../api/httpClient';
 import SpinnerContainer from '../../components/Spinner/SpinnerContainer';
@@ -46,24 +46,55 @@ const FinancierDetails = () => {
 	return (
 		<div className="py-3">
 			<Container>
-				<h2 className="my-3 mb-4">تفاصيل الممول</h2>
-				<div className="card p-1 my-2 bg-gray">
-					<h4>الأســم : {financier.name}</h4>
-					<p>البريد الاليكتروني : {financier.email}</p>
-					<p>رقم التسجيل الضريبي : {financier.TaxRegistrationNum}</p>
-					<p>الرقم القومي : {financier.nationalID}</p>
-					<p>اسم المستخدم : {financier.userName}</p>
-					<p>كلمه المرور : {financier.password}</p>
-					<p>رقـــم الملف : {financier.fileNum}</p>
-					<p>
-						مسجل علي بوابة الضريبية الاليكترونية :{' '}
-						{financier.registered ? (
-							<IoCheckmarkDoneCircle size="1.5em" color="green" />
-						) : (
-							<AiFillCloseCircle size="1.5em" color="red" />
-						)}
-					</p>
+				<div className="d-flex justify-content-between align-items-center mb-4">
+					<h2 className="my-3 mb-4">تفاصيل الممول</h2>
+					<button className="btn btn-success">تعديل بيانات الممول</button>
+					<button className="btn btn-danger">
+						حذف الممول من قاعده البيانات
+					</button>
 				</div>
+				<Table bordered className="details__table text-center">
+					<tbody>
+						<tr>
+							<td>الأســم</td>
+							<td>{financier.name}</td>
+						</tr>
+						<tr>
+							<td>البريد الاليكتروني</td>
+							<td>{financier.email}</td>
+						</tr>
+						<tr>
+							<td>رقم التسجيل الضريبي</td>
+							<td>{financier.TaxRegistrationNum}</td>
+						</tr>
+						<tr>
+							<td>الرقم القومي</td>
+							<td>{financier.nationalID}</td>
+						</tr>
+						<tr>
+							<td>اسم المستخدم</td>
+							<td>{financier.userName}</td>
+						</tr>
+						<tr>
+							<td>كلمه المرور</td>
+							<td>{financier.password}</td>
+						</tr>
+						<tr>
+							<td>رقـــم الملف</td>
+							<td>{financier.fileNum}</td>
+						</tr>
+						<tr>
+							<td>مسجل علي بوابة الضريبية الاليكترونية</td>
+							<td>
+								{financier.registered ? (
+									<IoCheckmarkDoneCircle size="1.5em" color="green" />
+								) : (
+									<AiFillCloseCircle size="1.5em" color="red" />
+								)}
+							</td>
+						</tr>
+					</tbody>
+				</Table>
 			</Container>
 		</div>
 	);

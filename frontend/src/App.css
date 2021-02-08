@@ -1,0 +1,20 @@
+.details__table {
+	max-width: 620px;
+	margin: auto;
+}
+
+.details__table,
+.details__table tr,
+.details__table tr td {
+	border: 1px solid #212529;
+}
+
+.details__table tbody tr {
+	color: #212529;
+	background-color: rgb(210 210 210 / 8%);
+}
+
+.details__table tbody tr td:first-child {
+	background-color: rgb(210 210 210 / 90%);
+	font-weight: bold;
+}

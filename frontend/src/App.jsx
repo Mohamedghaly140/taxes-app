@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import './App.css';
 import { AuthContext } from './context/auth-context';
 import AppRouter from './router/Router';
 
