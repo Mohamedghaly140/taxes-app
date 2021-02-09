@@ -22,21 +22,24 @@ const Home = () => {
 	useEffect(() => {
 		setLodaing(true);
 
-		httpClient
-			.get(`/api/financier/user/${userId}`, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			})
-			.then(res => {
-				console.log(res.data);
-				setClients(res.data.financiers);
-				setLodaing(false);
-			})
-			.catch(err => {
-				console.log(err.response.data.message);
-				setLodaing(false);
-			});
+		if (userId && token) {
+			httpClient
+				.get(`/api/financier/user/${userId}`, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+				.then(res => {
+					console.log(res.data);
+					const { financiers } = res.data;
+					setClients(financiers);
+					setLodaing(false);
+				})
+				.catch(err => {
+					console.log(err.response.data.message);
+					setLodaing(false);
+				});
+		}
 	}, [userId, token]);
 
 	useEffect(() => {
@@ -51,7 +54,7 @@ const Home = () => {
 		// eslint-disable-next-line
 	}, [text]);
 
-	if (loading || !clients) {
+	if (loading || !clients || !userId || !token) {
 		return (
 			<div className="vh-100 d-flex align-items-center justify-content-center">
 				<Spinner />

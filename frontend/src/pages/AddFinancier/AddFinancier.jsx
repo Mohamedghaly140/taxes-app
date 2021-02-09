@@ -286,7 +286,7 @@ const AddFinancier = () => {
 						</Form.Group>
 						<Form.Group>
 							<Form.Check
-								id="registered"
+								id="addValue"
 								className="ml-4"
 								type="checkbox"
 								label="قيمــه مضافة"

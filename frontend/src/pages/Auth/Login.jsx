@@ -1,5 +1,5 @@
-import { useState, useContext, useCallback } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useState, useContext, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 
 import { AuthContext } from '../../context/auth-context';
@@ -9,8 +9,6 @@ import SpinnerContainer from '../../components/Spinner/SpinnerContainer';
 const Login = () => {
 	const authContext = useContext(AuthContext);
 	const { login } = authContext;
-
-	const history = useHistory();
 
 	const [loading, setLodaing] = useState(false);
 	const [user, setUser] = useState({
@@ -24,29 +22,27 @@ const Login = () => {
 		setUser({ ...user, [event.target.name]: event.target.value });
 	};
 
-	const onSubmitHandler = useCallback(
-		event => {
-			event.preventDefault();
+	const onSubmitHandler = async event => {
+		event.preventDefault();
 
-			setLodaing(true);
+		setLodaing(true);
 
-			httpClient
-				.post('/api/auth/login', user)
-				.then(res => {
-					// console.log(res.data);
-					const userData = res.data;
-					const { userId, token, name } = userData;
-					login(userId, token, name);
-					setLodaing(false);
-					history.replace('/');
-				})
-				.catch(err => {
-					console.log(err.response.data.message);
-					setLodaing(false);
-				});
-		},
-		[user, history, login]
-	);
+		try {
+			const res = await httpClient.post('/api/auth/login', user);
+			const userData = res.data;
+			const { userId, token, name } = userData;
+			login(userId, token, name);
+			setLodaing(false);
+			// history.push('/');
+		} catch (err) {
+			console.log(err.response.data.message);
+			// setLodaing(false);
+		}
+	};
+
+	useEffect(() => {
+		return () => null;
+	}, []);
 
 	return (
 		<div className="d-flex flex-column justify-content-center align-items-center pt-5">

@@ -1,4 +1,4 @@
-import { useState, useContext, useCallback } from 'react';
+import { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 
@@ -25,29 +25,26 @@ const SignUp = () => {
 		setUser({ ...user, [event.target.name]: event.target.value });
 	};
 
-	const onSubmitHandler = useCallback(
-		event => {
-			event.preventDefault();
+	const onSubmitHandler = event => {
+		event.preventDefault();
 
-			setLodaing(true);
+		setLodaing(true);
 
-			httpClient
-				.post('/api/auth/signup', user)
-				.then(res => {
-					// console.log(res.data);
-					const userData = res.data;
-					const { userId, token, name } = userData;
-					login(userId, token, name);
-					setLodaing(false);
-					history.replace('/');
-				})
-				.catch(err => {
-					console.log(err.response.data.message);
-					setLodaing(false);
-				});
-		},
-		[user, history, login]
-	);
+		httpClient
+			.post('/api/auth/signup', user)
+			.then(res => {
+				// console.log(res.data);
+				const userData = res.data;
+				const { userId, token, name } = userData;
+				login(userId, token, name);
+				setLodaing(false);
+				history.replace('/');
+			})
+			.catch(err => {
+				console.log(err.response.data.message);
+				setLodaing(false);
+			});
+	};
 
 	return (
 		<div className="d-flex flex-column justify-content-center align-items-center pt-5">

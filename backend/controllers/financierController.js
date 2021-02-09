@@ -237,7 +237,7 @@ exports.updateFinancierById = async (req, res, next) => {
 	updatedFinancier.phone = req.body.phone;
 
 	try {
-		updatedFinancier.save();
+		await updatedFinancier.save();
 	} catch (err) {
 		return next(
 			new HttpError('Someting went wrong, could not update financier', 500)
