@@ -1,5 +1,4 @@
 import { useState, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 
 import { AuthContext } from '../../context/auth-context';
@@ -9,8 +8,6 @@ import SpinnerContainer from '../../components/Spinner/SpinnerContainer';
 const SignUp = () => {
 	const authContext = useContext(AuthContext);
 	const { login } = authContext;
-
-	const history = useHistory();
 
 	const [loading, setLodaing] = useState(false);
 	const [user, setUser] = useState({
@@ -38,7 +35,6 @@ const SignUp = () => {
 				const { userId, token, name } = userData;
 				login(userId, token, name);
 				setLodaing(false);
-				history.replace('/');
 			})
 			.catch(err => {
 				console.log(err.response.data.message);
