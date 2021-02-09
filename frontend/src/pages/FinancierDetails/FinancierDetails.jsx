@@ -1,10 +1,13 @@
 import { useState, useEffect, useContext } from 'react';
 import { Container, Table } from 'react-bootstrap';
 import { useParams, useHistory, Link } from 'react-router-dom';
+
 import httpClient from '../../api/httpClient';
 import SpinnerContainer from '../../components/Spinner/SpinnerContainer';
 import { IoCheckmarkDoneCircle } from 'react-icons/io5';
 import { AiFillCloseCircle } from 'react-icons/ai';
+import { RiDeleteBin5Fill } from 'react-icons/ri';
+import { FiEdit } from 'react-icons/fi';
 
 import { AuthContext } from '../../context/auth-context';
 
@@ -26,7 +29,6 @@ const FinancierDetails = () => {
 				},
 			})
 			.then(res => {
-				console.log(res.data);
 				setFinancier(res.data.financier);
 				setLoading(false);
 			})
@@ -44,7 +46,6 @@ const FinancierDetails = () => {
 				},
 			})
 			.then(res => {
-				console.log(res.data);
 				setLoading(false);
 				history.push('/');
 			})
@@ -63,7 +64,7 @@ const FinancierDetails = () => {
 	}
 
 	return (
-		<div className="py-3">
+		<div className="py-3 mb-5">
 			<Container>
 				<div className="d-flex justify-content-between align-items-center mb-4">
 					<h2 className="m-0">تفاصيل الممول</h2>
@@ -71,13 +72,13 @@ const FinancierDetails = () => {
 						className="btn btn-success"
 						to={`/edit-financier/${financier.id}?editMode=true`}
 					>
-						تعديل بيانات الممول
+						تعديل بيانات الممول <FiEdit size="1.5em" />
 					</Link>
 					<button
 						className="btn btn-danger"
 						onClick={() => financierDeleteHandler(financier.id)}
 					>
-						حذف الممول من قاعده البيانات
+						حذف الممول من قاعده البيانات <RiDeleteBin5Fill size="1.5em" />
 					</button>
 				</div>
 				<Table bordered className="details__table text-center">

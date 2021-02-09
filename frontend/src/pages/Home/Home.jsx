@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Container, Table } from 'react-bootstrap';
 import { IoCheckmarkDoneCircle } from 'react-icons/io5';
 import { AiFillCloseCircle } from 'react-icons/ai';
+import { AiOutlineClear } from 'react-icons/ai';
+import { BiAddToQueue } from 'react-icons/bi';
 import { BiSearch } from 'react-icons/bi';
 
 import Spinner from '../../components/Spinner/SpinnerContainer';
@@ -30,7 +32,6 @@ const Home = () => {
 					},
 				})
 				.then(res => {
-					console.log(res.data);
 					const { financiers } = res.data;
 					setClients(financiers);
 					setLodaing(false);
@@ -79,7 +80,9 @@ const Home = () => {
 				<h2 className="text-center py-2 my-3">القوائم</h2>
 				<div className="py-2 mb-4 d-flex justify-content-between align-items-center">
 					<div>
-						<Link to="/add-financier">اضافة ممول جديد</Link>
+						<Link to="/add-financier">
+							اضافة ممول جديد <BiAddToQueue size="1.5em" />
+						</Link>
 					</div>
 					<div>
 						للذهاب الي البوابة الاليكترونية{' '}
@@ -100,10 +103,11 @@ const Home = () => {
 						</span>
 						<div className="d-flex">
 							<button
-								className="btn btn-danger mr-1"
+								className="btn btn-danger mr-1 d-flex"
 								onClick={() => setText('')}
 							>
-								حـذف
+								<span className="d-inline-block mr-2">حـذف</span>
+								<AiOutlineClear size="1.5em" />
 							</button>
 							<input
 								className="form-control"

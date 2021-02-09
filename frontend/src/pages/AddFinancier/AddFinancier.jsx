@@ -119,7 +119,6 @@ const AddFinancier = () => {
 					},
 				})
 				.then(res => {
-					console.log(res.data);
 					setLoading(false);
 					history.push('/');
 				})

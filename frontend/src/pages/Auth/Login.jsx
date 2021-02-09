@@ -33,10 +33,9 @@ const Login = () => {
 			const { userId, token, name } = userData;
 			login(userId, token, name);
 			setLodaing(false);
-			// history.push('/');
 		} catch (err) {
 			console.log(err.response.data.message);
-			// setLodaing(false);
+			setLodaing(false);
 		}
 	};
 

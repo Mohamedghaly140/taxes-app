@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 
 import { AuthContext } from '../../context/auth-context';
@@ -30,7 +30,6 @@ const SignUp = () => {
 		httpClient
 			.post('/api/auth/signup', user)
 			.then(res => {
-				// console.log(res.data);
 				const userData = res.data;
 				const { userId, token, name } = userData;
 				login(userId, token, name);
@@ -41,6 +40,10 @@ const SignUp = () => {
 				setLodaing(false);
 			});
 	};
+
+	useEffect(() => {
+		return () => null;
+	}, []);
 
 	return (
 		<div className="d-flex flex-column justify-content-center align-items-center pt-5">
