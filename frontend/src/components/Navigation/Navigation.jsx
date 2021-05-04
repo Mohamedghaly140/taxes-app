@@ -1,13 +1,15 @@
-import { Fragment, useContext } from 'react';
+import { Fragment } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Container, Navbar, Nav } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import { CgLogOut } from 'react-icons/cg';
 
-import { AuthContext } from '../../context/auth-context';
+import { authActions } from '../../redux';
 
 const Navigation = () => {
-	const authContext = useContext(AuthContext);
-	const { isLoggedIn, name, logout } = authContext;
+	const { userInfo, isLoggedIn } = useSelector(state => state.auth);
+
+	const dispatch = useDispatch();
 
 	return (
 		<Navbar bg="dark" variant="dark" expand="md">
@@ -33,9 +35,16 @@ const Navigation = () => {
 								</Nav.Link>
 							</Fragment>
 						)}
-						{isLoggedIn && <Nav.Link className="active">مرحبا {name}</Nav.Link>}
 						{isLoggedIn && (
-							<Nav.Link onClick={logout} className="active">
+							<Nav.Link className="active">
+								مرحبا {userInfo && userInfo.name}
+							</Nav.Link>
+						)}
+						{isLoggedIn && (
+							<Nav.Link
+								onClick={() => dispatch(authActions.logout())}
+								className="active"
+							>
 								تسجيل الخروج <CgLogOut color="#fff" />
 							</Nav.Link>
 						)}

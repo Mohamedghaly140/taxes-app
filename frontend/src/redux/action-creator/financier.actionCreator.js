@@ -43,8 +43,6 @@ export const getFinancierList = _ => {
 				config
 			);
 
-			console.log(data);
-
 			dispatch({
 				type: GET_FINANCIERS_LIST_SUCCESS,
 				payload: { financiers: data.financiers, message: data.message },
@@ -78,8 +76,6 @@ export const getFinancierById = id => {
 
 		try {
 			const { data } = await httpClient.get(`api/financier/${id}`, config);
-
-			console.log(data);
 
 			dispatch({
 				type: GET_FINANCIER_SUCCESS,
@@ -119,8 +115,6 @@ export const addFinancier = financierData => {
 				config
 			);
 
-			console.log(data);
-
 			dispatch({
 				type: ADD_FINANCIER_SUCCESS,
 				payload: { financier: data.financier, message: data.message },
@@ -159,8 +153,6 @@ export const updateFinancier = (id, financierData) => {
 				config
 			);
 
-			console.log(data);
-
 			dispatch({
 				type: UPDATE_FINANCIER_SUCCESS,
 				payload: { financier: data.financier, message: data.message },
@@ -192,12 +184,8 @@ export const deleteFinancier = id => {
 			},
 		};
 
-		console.log(userInfo.token);
-
 		try {
 			const { data } = await httpClient.delete(`/api/financier/${id}`, config);
-
-			console.log(data);
 
 			dispatch({
 				type: DELETE_FINANCIER_SUCCESS,
