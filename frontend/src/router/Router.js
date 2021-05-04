@@ -1,6 +1,5 @@
-import { useContext } from 'react';
+import { useSelector } from 'react-redux';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { AuthContext } from '../context/auth-context';
 import Navigation from '../components/Navigation/Navigation';
 import AddFinancier from '../pages/AddFinancier/AddFinancier';
 
@@ -10,12 +9,11 @@ import FinancierDetails from '../pages/FinancierDetails/FinancierDetails';
 import Home from '../pages/Home/Home';
 
 const Routes = () => {
-	const authContext = useContext(AuthContext);
-	const { isLoggedIn, token } = authContext;
+	const { userInfo, isLoggedIn } = useSelector(state => state.auth);
 
 	let routes;
 
-	if (token && isLoggedIn) {
+	if (userInfo && userInfo.token && isLoggedIn) {
 		routes = (
 			<Switch>
 				<Route exact path="/" component={Home} />

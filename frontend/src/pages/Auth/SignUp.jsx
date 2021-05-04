@@ -1,22 +1,22 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { AuthContext } from '../../context/auth-context';
-import httpClient from '../../api/httpClient';
+import { authActions } from '../../redux';
+import Message from '../../components/Message/Message';
 import SpinnerContainer from '../../components/Spinner/SpinnerContainer';
 
 const SignUp = () => {
-	const authContext = useContext(AuthContext);
-	const { login } = authContext;
-
-	const [loading, setLodaing] = useState(false);
 	const [user, setUser] = useState({
 		name: '',
 		email: '',
 		password: '',
 	});
-
 	const { name, email, password } = user;
+
+	const { loading, error } = useSelector(state => state.auth);
+
+	const dispatch = useDispatch();
 
 	const inputChangeHandler = event => {
 		setUser({ ...user, [event.target.name]: event.target.value });
@@ -25,29 +25,13 @@ const SignUp = () => {
 	const onSubmitHandler = event => {
 		event.preventDefault();
 
-		setLodaing(true);
-
-		httpClient
-			.post('/api/auth/signup', user)
-			.then(res => {
-				const userData = res.data;
-				const { userId, token, name } = userData;
-				login(userId, token, name);
-				setLodaing(false);
-			})
-			.catch(err => {
-				console.log(err.response.data.message);
-				setLodaing(false);
-			});
+		dispatch(authActions.register(user));
 	};
-
-	useEffect(() => {
-		return () => null;
-	}, []);
 
 	return (
 		<div className="d-flex flex-column justify-content-center align-items-center pt-5">
 			<h2 className="mb-5">مستخدم جديد</h2>
+			{error && <Message>{error}</Message>}
 			<Form
 				className="w-100"
 				style={{ maxWidth: '450px' }}

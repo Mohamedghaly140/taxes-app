@@ -1,16 +1,17 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { AuthContext } from '../../context/auth-context';
-import httpClient from '../../api/httpClient';
+import { authActions } from '../../redux';
+import Message from '../../components/Message/Message';
 import SpinnerContainer from '../../components/Spinner/SpinnerContainer';
 
 const Login = () => {
-	const authContext = useContext(AuthContext);
-	const { login } = authContext;
+	const { loading, error } = useSelector(state => state.auth);
 
-	const [loading, setLodaing] = useState(false);
+	const dispatch = useDispatch();
+
 	const [user, setUser] = useState({
 		email: '',
 		password: '',
@@ -22,30 +23,16 @@ const Login = () => {
 		setUser({ ...user, [event.target.name]: event.target.value });
 	};
 
-	const onSubmitHandler = async event => {
+	const onSubmitHandler = event => {
 		event.preventDefault();
 
-		setLodaing(true);
-
-		try {
-			const res = await httpClient.post('/api/auth/login', user);
-			const userData = res.data;
-			const { userId, token, name } = userData;
-			login(userId, token, name);
-			setLodaing(false);
-		} catch (err) {
-			console.log(err.response.data.message);
-			setLodaing(false);
-		}
+		dispatch(authActions.login(user));
 	};
-
-	useEffect(() => {
-		return () => null;
-	}, []);
 
 	return (
 		<div className="d-flex flex-column justify-content-center align-items-center pt-5">
 			<h2 className="mb-5">تسجيل الدخول</h2>
+			{error && <Message>{error}</Message>}
 			<Form
 				className="w-100"
 				style={{ maxWidth: '450px' }}
