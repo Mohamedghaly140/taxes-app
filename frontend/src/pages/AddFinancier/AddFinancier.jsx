@@ -1,21 +1,18 @@
-import { useState, useContext, useEffect } from 'react';
-import { useParams, useHistory, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Form, Button, Container } from 'react-bootstrap';
+import { useParams, useHistory, useLocation } from 'react-router-dom';
 
-import httpClient from '../../api/httpClient';
+import { financierActions } from '../../redux';
+import Message from '../../components/Message/Message';
 import Spinner from '../../components/Spinner/SpinnerContainer';
-import { AuthContext } from '../../context/auth-context';
 
 const AddFinancier = () => {
-	const authContext = useContext(AuthContext);
-	const { token, userId } = authContext;
-
 	const { id } = useParams();
 	const { search } = useLocation();
 	const history = useHistory();
 	const editMode = search.split('=')[1] === 'true' ? true : false;
 
-	const [loading, setLoading] = useState(false);
 	const [registered, setRegistered] = useState(false);
 	const [addValue, setAddValue] = useState(false);
 	const [financier, setFinancier] = useState({
@@ -46,102 +43,83 @@ const AddFinancier = () => {
 		setFinancier({ ...financier, [event.target.name]: event.target.value });
 	};
 
+	const { userInfo } = useSelector(state => state.auth);
+
+	const { financier: getFinancier, error: getError } = useSelector(
+		state => state.getFinancier
+	);
+
+	const {
+		loading: addLoading,
+		success: addSuccess,
+		error: addError,
+	} = useSelector(state => state.addFinancier);
+
+	const {
+		loading: updateLoading,
+		success: updateSuccess,
+		error: updateError,
+	} = useSelector(state => state.updateFinancier);
+
+	const dispatch = useDispatch();
+
 	const data = {
 		...financier,
 		nationalID: +nationalID,
 		registered,
 		addValue,
-		creator: userId,
+		creator: userInfo.userId,
 	};
 
 	useEffect(() => {
 		console.log('edit id', id, editMode);
-		if (editMode) {
-			httpClient
-				.get(`/api/financier/${id}`, {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				})
-				.then(res => {
-					console.log('from server 67 editMode', res.data);
-					const financier = res.data.financier;
-					const {
-						name,
-						email,
-						password,
-						fileNum,
-						nationalID,
-						userName,
-						phone,
-						attorneyNum,
-						TaxRegistrationNum,
-						registered,
-						addValue,
-					} = financier;
+		if (editMode && id) {
+			dispatch(financierActions.getFinancierById(id));
+			const {
+				name,
+				email,
+				password,
+				fileNum,
+				nationalID,
+				userName,
+				phone,
+				attorneyNum,
+				TaxRegistrationNum,
+				registered,
+				addValue,
+			} = getFinancier;
 
-					setAddValue(addValue);
-					setRegistered(registered);
+			setAddValue(addValue);
+			setRegistered(registered);
 
-					setFinancier({
-						name,
-						phone,
-						email,
-						fileNum,
-						password,
-						userName,
-						nationalID: nationalID.toString(),
-						attorneyNum,
-						TaxRegistrationNum,
-					});
-
-					setLoading(false);
-				})
-				.catch(err => {
-					console.log(err.response.data.message);
-					setLoading(false);
-				});
+			setFinancier({
+				name,
+				phone,
+				email,
+				fileNum,
+				password,
+				userName,
+				nationalID: nationalID.toString(),
+				attorneyNum,
+				TaxRegistrationNum,
+			});
 		}
-	}, [id, editMode, token]);
+		// eslint-disable-next-line
+	}, [id, editMode, userInfo, dispatch]);
+
+	useEffect(() => {
+		if (addSuccess || updateSuccess) {
+			history.push('/');
+		}
+	}, [addSuccess, updateSuccess, history]);
 
 	const onSubmitHandler = event => {
 		event.preventDefault();
 
-		console.log(data);
-
-		setLoading(true);
-
 		if (editMode) {
-			httpClient
-				.put(`/api/financier/${id}`, data, {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				})
-				.then(res => {
-					setLoading(false);
-					history.push('/');
-				})
-				.catch(err => {
-					console.log(err.response.data.message);
-					setLoading(false);
-				});
+			dispatch(financierActions.updateFinancier(id, data));
 		} else {
-			httpClient
-				.post('/api/financier', data, {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				})
-				.then(res => {
-					console.log(res.data);
-					setLoading(false);
-					history.push('/');
-				})
-				.catch(err => {
-					console.log(err.response.data.message);
-					setLoading(false);
-				});
+			dispatch(financierActions.addFinancier(data));
 		}
 	};
 
@@ -150,6 +128,11 @@ const AddFinancier = () => {
 			<div className="py-2 my-2 mb-4 text-center">
 				<h2>{editMode ? 'تعديل بيانات الممول' : 'اضافة ممول جديد'}</h2>
 			</div>
+			<Container className="text-center px-2">
+				{getError && <Message>{getError}</Message>}
+				{addError && <Message>{addError}</Message>}
+				{updateError && <Message>{updateError}</Message>}
+			</Container>
 			<Container>
 				<Form onSubmit={onSubmitHandler} className="form-card mb-5 mt-3">
 					<div className="d-flex justify-content-between align-items-center">
@@ -296,7 +279,7 @@ const AddFinancier = () => {
 					</div>
 
 					<div className="d-flex justify-content-start align-items-center px-3">
-						{loading ? (
+						{addLoading || updateLoading ? (
 							<Spinner />
 						) : (
 							<Button variant="primary" type="submit">

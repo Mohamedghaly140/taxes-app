@@ -50,6 +50,7 @@ exports.getFinanciersByUserId = async (req, res, next) => {
 
 	res.status(200).json({
 		message: `find successfuly financiers with userId ${userId}`,
+		count: financiers.length,
 		financiers: financiers.map(f => f.toObject({ getters: true })),
 	});
 };
@@ -175,7 +176,7 @@ exports.createFinancier = async (req, res, next) => {
 		await session.commitTransaction();
 	} catch (err) {
 		const error = new HttpError(
-			'Creating financier faild, please try again',
+			`Creating financier faild, please try again later and please check yor inputs ${err.errors.nationalID}`,
 			500
 		);
 		return next(error);
@@ -202,6 +203,10 @@ exports.updateFinancierById = async (req, res, next) => {
 		updatedFinancier = await Financier.findById(financierId);
 
 		if (!updatedFinancier) {
+			console.log(
+				'🚀 ~ file: financierController.js ~ line 206 ~ exports.createFinancier= ~ err',
+				err
+			);
 			return next(
 				new HttpError(
 					`Could not find any financier with the provided id ${placeId}`,

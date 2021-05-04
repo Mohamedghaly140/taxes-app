@@ -29,8 +29,6 @@ export const login = userData => {
 				payload: data,
 			});
 
-			console.log(data);
-
 			localStorage.setItem('userInfo', JSON.stringify(data));
 		} catch (error) {
 			dispatch({
@@ -70,8 +68,6 @@ export const register = userData => {
 				type: USER_AUTH_LOGIN,
 				payload: data,
 			});
-
-			console.log(data);
 
 			localStorage.setItem('userInfo', JSON.stringify(data));
 		} catch (error) {

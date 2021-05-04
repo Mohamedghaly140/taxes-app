@@ -1,4 +1,5 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Container, Table } from 'react-bootstrap';
 import { IoCheckmarkDoneCircle } from 'react-icons/io5';
@@ -7,46 +8,31 @@ import { AiOutlineClear } from 'react-icons/ai';
 import { BiAddToQueue } from 'react-icons/bi';
 import { BiSearch } from 'react-icons/bi';
 
+import { financierActions } from '../../redux';
+import Message from '../../components/Message/Message';
 import Spinner from '../../components/Spinner/SpinnerContainer';
-import httpClient from '../../api/httpClient';
-import { AuthContext } from '../../context/auth-context';
 
 const Home = () => {
-	const authContext = useContext(AuthContext);
-	const { userId, token } = authContext;
-
 	const [text, setText] = useState('');
 	const [FilterClients, setFilterClients] = useState(null);
 
-	const [clients, setClients] = useState(null);
-	const [loading, setLodaing] = useState(false);
+	const { userInfo } = useSelector(state => state.auth);
+	const { loading, financiers, error } = useSelector(
+		state => state.getFinanciersList
+	);
+
+	const dispatch = useDispatch();
 
 	useEffect(() => {
-		setLodaing(true);
-
-		if (userId && token) {
-			httpClient
-				.get(`/api/financier/user/${userId}`, {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				})
-				.then(res => {
-					const { financiers } = res.data;
-					setClients(financiers);
-					setLodaing(false);
-				})
-				.catch(err => {
-					console.log(err.response.data.message);
-					setLodaing(false);
-				});
+		if (userInfo && userInfo.userId && userInfo.token) {
+			dispatch(financierActions.getFinancierList());
 		}
-	}, [userId, token]);
+	}, [userInfo, dispatch]);
 
 	useEffect(() => {
-		if (text !== '' && clients) {
+		if (text !== '' && financiers) {
 			setFilterClients(
-				clients.filter(client => {
+				financiers.filter(client => {
 					const regex = new RegExp(`${text}`, 'gi');
 					return client.name.match(regex) || client.email.match(regex);
 				})
@@ -55,7 +41,7 @@ const Home = () => {
 		// eslint-disable-next-line
 	}, [text]);
 
-	if (loading || !clients || !userId || !token) {
+	if (loading && !financiers) {
 		return (
 			<div className="vh-100 d-flex align-items-center justify-content-center">
 				<Spinner />
@@ -63,7 +49,7 @@ const Home = () => {
 		);
 	}
 
-	if (clients.length === 0) {
+	if (!financiers || !financiers.length) {
 		return (
 			<div className="d-flex justify-content-center align-items-center vh-100">
 				<div className="text-center" style={{ fontSize: 'large' }}>
@@ -78,6 +64,7 @@ const Home = () => {
 		<div>
 			<Container>
 				<h2 className="text-center py-2 my-3">القوائم</h2>
+				{error && <Message>{error}</Message>}
 				<div className="py-2 mb-4 d-flex justify-content-between align-items-center">
 					<div>
 						<Link to="/add-financier">
@@ -139,7 +126,7 @@ const Home = () => {
 						</thead>
 						<tbody>
 							{text === '' &&
-								clients.map((client, i) => (
+								financiers.map((client, i) => (
 									<tr key={client.id}>
 										<td>
 											<Link
